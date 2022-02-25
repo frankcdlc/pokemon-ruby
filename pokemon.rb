@@ -3,28 +3,35 @@ require_relative "pokedex/pokemons"
 
 class Pokemon
   # include neccesary modules
-  attr_reader :name, :pokemon, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves
+  attr_reader :name, :pokemon, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat, :stat_effort
 
   # (complete parameters)
-  def initialize(pokemon_name, pokemon)
+  def initialize(pokemon_name, pokemon, level)
     poke_details = Pokedex::POKEMONS[pokemon]
 
     @name = pokemon_name
-    @pokemon = pokemon
+    @species = pokemon
     @type = poke_details[:type]
     @base_exp = poke_details[:base_exp]
     @effort_points = poke_details[:effort_points]
     @growth_rate = poke_details[:growth_rate]
     @base_stats = poke_details[:base_stats]
     @moves = poke_details[:moves]
+    @stat_individual = { hp: rand(0..31), attack: rand(0..31), defense: rand(0..31), special_attack: rand(0..31), special_defense: rand(0..31), speed: rand(0..31) }
+    @stat_effort = {hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
+    @level = level
+    hp = ((2 * base_stats[:hp] + stat_individual[:hp] + stat_effort[:hp]) * level / 100 + level + 10).floor
+    #  = ((2 * base_stat + stat_individual_values + stat_effort) * level / 100 + 5).floor
+    @stat = {hp: hp}
     # Retrieve pokemon info from Pokedex and set instance variables
     # Calculate Individual Values and store them in instance variable
     # Create instance variable with effort values. All set to 0
     # Store the level in instance variable
     # If level is 1, set experience points to 0 in instance variable.
-    @level = 1
+    
     # If level is not 1, calculate the minimum experience point for that level and store it in instance variable.
     # Calculate pokemon stats and store them in instance variable
+
   end
 
   def prepare_for_battle
@@ -70,7 +77,8 @@ class Pokemon
   # Create here auxiliary methods
 end
 
-# pokemon = Pokemon.new("hola", "Bulbasaur")
+pokemon = Pokemon.new("hola", "Bulbasaur", 1)
 # puts pokemon.name
 # puts pokemon.pokemon
 # p pokemon.type[1]
+p pokemon.stat
