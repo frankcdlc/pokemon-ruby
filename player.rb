@@ -5,11 +5,12 @@ require_relative "pokedex/pokemons"
 class Player
   # (Complete parameters)
   attr_reader :name, :pokemon
-  def initialize(name,pokemon,pokemon_name)
-    @name = name
-    @pokemon = Pokemon.new(pokemon_name, pokemon)
-
+  def initialize(name, pokemon, pokemon_name = "", level = 1)
     # Complete this
+    @name = name
+    pokemon_name = pokemon if pokemon_name == ""
+    @pokemon = Pokemon.new(pokemon_name, pokemon, level)
+
   end
 
   def select_move
@@ -23,14 +24,11 @@ class Bot < Player
 
   def initialize
     hash = Pokedex::POKEMONS
-    options = hash.collect do |key, value| 
-      key
-    end
+    options = hash.collect { |key, value| key }
     @random_pokemon = options.sample
-
-    # super("Random Person",random_pokemon[:species],"")
+    super("Random Person", @random_pokemon, "", 1)
   end
 end
 
 bot = Bot.new
-p bot.random_pokemon
+p bot

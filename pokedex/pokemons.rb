@@ -75,9 +75,5 @@ module Pokedex
   # }.freeze
 end
 
-include Pokedex
-
-pokemon = Pokedex::POKEMONS["Bulbasaur"]
-p pokemon
 
 

@@ -7,6 +7,20 @@ require_relative "player"
 # include GetInput
 
 class Game
+  def greeting
+    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
+    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
+    puts "#$##$##$##$ ---        Pokemon Ruby         --- #$##$##$#$#"
+    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
+    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
+    puts ""
+    puts "Hello there! Welcome to the world of POKEMON! My name is OAK!"
+    puts "People call me the POKEMON PROF!"
+    puts "This world is inhabited by creatures called POKEMON! For some"
+    puts "people, POKEMON are pets. Others use them for fights. Myself..."
+    puts "I study POKEMON as a profession."
+  end
+  
   def select_pokemon(name)
     puts "Right! So your name is #{name.upcase}!"
     puts "Your very own POKEMON legend is about to unfold! A world of"
@@ -25,19 +39,7 @@ class Game
     end
     select_pokemon
   end
-  def greeting
-    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
-    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
-    puts "#$##$##$##$ ---        Pokemon Ruby         --- #$##$##$#$#"
-    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
-    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
-    puts ""
-    puts "Hello there! Welcome to the world of POKEMON! My name is OAK!"
-    puts "People call me the POKEMON PROF!"
-    puts "This world is inhabited by creatures called POKEMON! For some"
-    puts "people, POKEMON are pets. Others use them for fights. Myself..."
-    puts "I study POKEMON as a profession."
-  end
+  
   def get_input(prompt)
     input = ""
     while input.empty?
@@ -67,11 +69,12 @@ class Game
     name = get_input("First, what's your name?")
     pokemon = select_pokemon(name)
     pokemon_name = set_name(pokemon)
-    player = Player.new(name,pokemon,pokemon_name)
-    start_menu(player)
+    
     # Then create a Player with that information and store it in @player
-
+    player = Player.new(name, pokemon, pokemon_name)
+    
     # Suggested game flow
+    start_menu(player)
     action = menu
     until action == "Exit"
       case action
@@ -131,10 +134,6 @@ class Game
   end
 end
 
-# game = Game.new
-# game.start
+game = Game.new
+game.start
 
-
-# p player
-juego = Game.new
-juego.start
