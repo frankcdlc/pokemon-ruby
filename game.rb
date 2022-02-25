@@ -1,4 +1,9 @@
 # require neccesary files
+require_relative "get_input"
+require_relative "greeting"
+
+include Greet
+include GetInput
 
 class Game
   def start
@@ -46,5 +51,8 @@ class Game
   end
 end
 
-game = Game.new
-game.start
+# game = Game.new
+# game.start
+
+greeting
+get_input("First, what's your name?")
