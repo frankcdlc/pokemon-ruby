@@ -1,4 +1,5 @@
 # require neccesary files
+require_relative "player"
 # require_relative "get_input"
 # require_relative "greeting"
 
@@ -6,11 +7,11 @@
 # include GetInput
 
 class Game
-  def select_pokemon
-    puts "Right! So your name is NOMBRE!"
+  def select_pokemon(name)
+    puts "Right! So your name is #{name.upcase}!"
     puts "Your very own POKEMON legend is about to unfold! A world of"
     puts "dreams and adventures with POKEMON awaits! Let's go!"
-    puts "Here, NOMBRE! There are POKEMON trainer"
+    puts "Here, #{name.upcase}! There are POKEMON trainer"
     puts "In my old age, I have ony 3 left, but you can have one! Choose!"
 
     options = ["Bulbasaur", "Charmander", "Squirtle"]
@@ -18,9 +19,9 @@ class Game
     options.each.with_index {|option, index| print "#{index +1}. #{option}    "}
     puts ""
     select_pokemon = ""
-    until options.include?(select_pokemon.capitalize)
+    until options.include?(select_pokemon)
     print "> "
-    select_pokemon = gets.chomp
+    select_pokemon = gets.chomp.capitalize
     end
     select_pokemon
   end
@@ -47,27 +48,27 @@ class Game
     input
   end
 
-  def set_name
-    puts "You selected CHARMANDER. Great choice!"
+  def set_name(pokemon)
+    puts "You selected #{pokemon.upcase}. Great choice!"
     puts "Give your pokemon a name?"
     print "> "
     pokemon_name = gets.chomp
   end
 
-  def start_menu
-    puts "GREAT MASTER, raise your young GREAT CHAR by making it fight!"
+  def start_menu(player)
+    puts "#{player.name.upcase}, raise your young #{player.pokemon.name.upcase} by making it fight!"
     puts "When you feel ready you can challenge BROCK, the PEWTER's GYM LEADER"
-    puts "-----------------------Menu--------------------------"
-    puts ""
-    puts "1. Stats\t2. train\t3. Leader\t4. Exit"
-    print "> "
-    opcion = gets.chomp
-
+    puts 
   end
 
   def start
     # Create a welcome method(s) to get the name, pokemon and pokemon_name from the user
-
+    greeting
+    name = get_input("First, what's your name?")
+    pokemon = select_pokemon(name)
+    pokemon_name = set_name(pokemon)
+    player = Player.new(name,pokemon,pokemon_name)
+    start_menu(player)
     # Then create a Player with that information and store it in @player
 
     # Suggested game flow
@@ -81,7 +82,7 @@ class Game
         challenge_leader
         action = menu
       when "Stats"
-        show_stats
+        show_stats(player)
         action = menu
       end
     end
@@ -91,14 +92,29 @@ class Game
 
   def train
     # Complete this
+
   end
 
   def challenge_leader
     # Complete this
   end
 
-  def show_stats
+  def show_stats(player)
     # Complete this
+    pok = player.pokemon
+    puts ""
+    puts "#{player.name}:"
+    puts "Kind: #{pok.pokemon}"
+    puts "Level: #{pok.level}"
+    puts "Type: #{pok.type.join(", ")}"
+    puts "Stats:"
+    puts "HP: #{pok.base_stats[:hp]}"
+    puts "Attack: #{pok.base_stats[:attack]}"
+    puts "Defense: #{pok.base_stats[:defense]}"
+    puts "Special Attack: #{pok.base_stats[:special_attack]}"
+    puts "Special Defense: #{pok.base_stats[:special_defense]}"
+    puts "Speed: #{pok.base_stats[:speed]}"
+    puts "Experience Points: #{pok.base_exp}"
   end
 
   def goodbye
@@ -107,6 +123,11 @@ class Game
 
   def menu
     # Complete this
+    puts "-----------------------Menu--------------------------"
+    puts ""
+    puts "1. Stats\t2. Train\t3. Leader\t4. Exit"
+    print "> "
+    opcion = gets.chomp.downcase.capitalize
   end
 end
 
@@ -114,9 +135,6 @@ end
 # game.start
 
 
+# p player
 juego = Game.new
-juego.greeting
-juego.get_input("First, what's your name?")
-pokemon = juego.select_pokemon
-pokemon_name = juego.set_name
-juego.start_menu
+juego.start
