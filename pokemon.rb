@@ -1,10 +1,23 @@
 # require neccesary files
+require_relative "pokedex/pokemons"
 
 class Pokemon
   # include neccesary modules
+  attr_reader :name, :pokemon, :type
+
 
   # (complete parameters)
-  def initialize
+  def initialize(pokemon_name, pokemon)
+    poke_details = Pokedex::POKEMONS[pokemon]
+
+    @name =pokemon_name
+    @pokemon = pokemon
+    @type = poke_details[:type]
+    @base_exp = poke_details[:base_exp]
+    @effort_points = poke_details[:effort_points]
+    @growth_rate = poke_details[:growth_rate]
+    @base_stats = poke_details[:base_stats]
+    @moves = poke_details[:moves]
     # Retrieve pokemon info from Pokedex and set instance variables
     # Calculate Individual Values and store them in instance variable
     # Create instance variable with effort values. All set to 0
@@ -56,3 +69,8 @@ class Pokemon
   # private methods:
   # Create here auxiliary methods
 end
+
+pokemon = Pokemon.new("hola", "Bulbasaur")
+puts pokemon.name
+puts pokemon.pokemon
+p pokemon.type[1]

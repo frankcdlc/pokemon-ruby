@@ -51,7 +51,7 @@ class Game
     puts "You selected CHARMANDER. Great choice!"
     puts "Give your pokemon a name?"
     print "> "
-    nombre_pokemon = gets.chomp
+    pokemon_name = gets.chomp
   end
 
   def start_menu

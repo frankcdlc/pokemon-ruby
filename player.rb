@@ -2,7 +2,11 @@
 
 class Player
   # (Complete parameters)
-  def initialize
+  attr_reader :name, :pokemon
+  def initialize(name,pokemon,pokemon_name)
+    @name = name
+    @pokemon = 
+
     # Complete this
   end
 
