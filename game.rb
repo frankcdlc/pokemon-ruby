@@ -78,13 +78,13 @@ class Game
     action = menu
     until action == "Exit"
       case action
-      when "Train"
-        train
+      when "Train","2"
+        train(player)
         action = menu
-      when "Leader"
+      when "Leader","3"
         challenge_leader
         action = menu
-      when "Stats"
+      when "Stats","1"
         show_stats(player)
         action = menu
       end
@@ -93,9 +93,22 @@ class Game
     goodbye
   end
 
-  def train
+  def train(player)
     # Complete this
-
+    bot = Bot.new
+    bot_p = bot.pokemon
+    puts "#{player.name} challenge Random Person for training"
+    puts "Random Person has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+    puts "What do you want to do now?"
+    puts "1. Fight        2. Leave"
+    print "> "
+    option = gets.chomp
+    if option == "Fight"
+      puts ""
+      puts "Random Person sent out #{bot_p.species.upcase}!"
+      puts "#{player.name} sent out #{player.pokemon.name.upcase}!"
+    end
+    
   end
 
   def challenge_leader
@@ -107,7 +120,7 @@ class Game
     pok = player.pokemon
     puts ""
     puts "#{player.name}:"
-    puts "Kind: #{pok.pokemon}"
+    puts "Kind: #{pok.species}"
     puts "Level: #{pok.level}"
     puts "Type: #{pok.type.join(", ")}"
     puts "Stats:"

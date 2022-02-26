@@ -74,6 +74,3 @@ module Pokedex
   #   fast: (1..100).map { |level| (4 * level**3 / 5.0).floor }
   # }.freeze
 end
-
-
-
