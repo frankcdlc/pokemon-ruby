@@ -1,6 +1,7 @@
 # require neccesary files
 require_relative "pokemon"
 require_relative "pokedex/pokemons"
+require_relative "pokedex/moves"
 
 class Player
   # (Complete parameters)
@@ -15,6 +16,8 @@ class Player
 
   def select_move
     # Complete this
+    move = gets.chomp
+    @pokemon.current_move = Pokedex::MOVES[move]
   end
 end
 
@@ -28,7 +31,15 @@ class Bot < Player
     @random_pokemon = options.sample
     super("Random Person", @random_pokemon, "", 1)
   end
+
+  def select_move
+    # Complete this
+    hash = Pokedex::MOVES
+    options = hash.collect { |key, value| key }
+    move_random = options.sample
+    @pokemon.current_move = Pokedex::MOVES[move_random]
+  end
 end
 
-bot = Bot.new
-p bot
+# bot = Bot.new
+# p bot
