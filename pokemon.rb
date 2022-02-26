@@ -1,11 +1,12 @@
 # require neccesary files
 require_relative "pokedex/pokemons"
+require_relative "pokedex/moves"
 
 class Pokemon
   # include neccesary modules
-  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move
+  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp
 
-  attr_writer :current_move
+  attr_writer :current_move, :current_hp
 
   # (complete parameters)
   def initialize(pokemon_name, pokemon, level)
@@ -44,11 +45,13 @@ class Pokemon
     end
 
     @current_move = nil
-
+    @current_hp = nil
   end
 
   def prepare_for_battle
     # Complete this
+    @current_move = nil
+    @current_hp = @stat2[:hp]
   end
 
   def receive_damage
@@ -66,17 +69,50 @@ class Pokemon
   def attack(target)
     # Print attack message 'Tortuguita used MOVE!'
     # Accuracy check
-    # If the movement is not missed
-    # -- Calculate base damage
-    # -- Critical Hit check
-    # -- If critical, multiply base damage and print message 'It was CRITICAL hit!'
-    # -- Effectiveness check
-    # -- Mutltiply damage by effectiveness multiplier and round down. Print message if neccesary
-    # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
-    # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
-    # ---- "It doesn't affect [target name]!" when effectivenes is 0
-    # -- Inflict damage to target and print message "And it hit [target name] with [damage] damage""
+    accuracy = false
+    accuracy = true if current_move[:accuracy] >= rand(1..100)
+    
     # Else, print "But it MISSED!"
+    unless accuracy
+      puts "But it MISSED!"
+    # If the movement is not missed
+    else
+    # -- Calculate base damage
+      offensive_stat = current_move[:type] == :normal ? stat2[:attack] : stat2[:special_attack]
+      
+      move_power = current_move[:power]
+      
+      target_defensive_stat = current_move[:type] == :normal ? target.stat2[:defense] : target.stat2[:special_defense]
+
+      damage = (((2 * level / 5.0 + 2).floor * offensive_stat * move_power / target_defensive_stat).floor / 50.0).floor + 2
+    
+      # -- Critical Hit check
+      hit_critcal = 16 == rand(1..16) ? 1.5 : 1
+      # -- If critical, multiply base damage and print message 'It was CRITICAL hit!'
+      if hit_critcal == 1.5
+        puts "It was CRITICAL hit!" 
+        damage *= 1.5
+      end
+
+      # -- Effectiveness check
+      # -- Mutltiply damage by effectiveness multiplier and round down. Print message if neccesary
+      v_effectiveness = effectiveness(target)
+
+      # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
+      if v_effectiveness <= 0.5 && v_effectiveness > 0
+        puts "It's not very effective..."
+      # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
+      elsif v_effectiveness <= 1.5 && v_effectiveness > 0.5
+        puts "It's super effective!"
+      # ---- "It doesn't affect [target name]!" when effectivenes is 0
+      else
+        puts "It doesn't affect #{target.name}!"
+      end
+      damage *=v_effectiveness
+      
+      # -- Inflict damage to target and print message "And it hit [target name] with [damage] damage""
+      puts "And it hit #{target.name} with #{damage} damage"
+    end
   end
 
   def increase_stats(target)
@@ -88,10 +124,30 @@ class Pokemon
 
   # private methods:
   # Create here auxiliary methods
+  def effectiveness(target)
+    multiplier = Pokedex::TYPE_MULTIPLIER
+    type_attack = current_move[:type]
+    target_type_pokemon = target.type
+    multiplier_array = []
+    multiplier.each do |hash| 
+      multiplier_array.push(hash) if hash[:user] == type_attack
+    end
+    # p multiplier_array
+    mult = 1
+    target_type_pokemon.each do |type|
+      multiplier_array.each do |hash|
+        mult *= hash[:multiplier] if type == hash[:target]
+      end
+    end
+    mult
+  end
 end
 
-# pokemon = Pokemon.new("hola", "Bulbasaur", 1)
+# pokemon = Pokemon.new("Bulb", "Bulbasaur", 1)
+# pokemon2 = Pokemon.new("hola", "Charmander", 1)
 # puts pokemon.name
 # puts pokemon.pokemon
 # p pokemon.type[1]
 # p pokemon.stat2
+# effect = pokemon.effectiveness(pokemon2)
+# p effect

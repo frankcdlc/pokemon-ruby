@@ -17,10 +17,12 @@ class Battle
     puts "#{player.name} sent out #{player_p.name.upcase}!"
     puts "-------------------Battle Start!-------------------"
     puts ""
+    player_p.prepare_for_battle
+    bot_p.prepare_for_battle
     puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
-    puts "HP: #{player_p.stat2[:hp]}"
+    puts "HP: #{player_p.current_hp}"
     puts "Random Person's #{bot_p.species.upcase} - Level #{bot_p.level}"
-    puts "HP: #{bot_p.stat2[:hp]}"
+    puts "HP: #{bot_p.current_hp}"
     puts ""
     puts "#{player.name}, select your move:"
     puts ""
@@ -31,16 +33,25 @@ class Battle
     first = first_attacker(player_p, bot_p)
     second = first == player_p ? bot_p : player_p
     
+    
     # Until one pokemon faints
 
     # --Print Battle Status
+    
     # --Both players select their moves
 
     # --Calculate which go first and which second
 
     # --First attack second
+    puts "--------------------------------------------------"
+    puts "#{first.name} used #{first.current_move[:name].upcase}!"
+    first.attack(second)
+    
     # --If second is fainted, print fainted message
     # --If second not fainted, second attack first
+    puts "--------------------------------------------------"
+    puts "#{second.name} used #{second.current_move[:name].upcase}!"
+    second.attack(first)
     # --If first is fainted, print fainted message
 
     # Check which player won and print messages
