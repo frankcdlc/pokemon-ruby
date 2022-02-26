@@ -1,5 +1,6 @@
 # require neccesary files
 require_relative "player"
+require_relative "battle"
 # require_relative "get_input"
 # require_relative "greeting"
 
@@ -104,11 +105,9 @@ class Game
     print "> "
     option = gets.chomp
     if option == "Fight"
-      puts ""
-      puts "Random Person sent out #{bot_p.species.upcase}!"
-      puts "#{player.name} sent out #{player.pokemon.name.upcase}!"
+      battle = Battle.new(player, bot)
+      battle.start
     end
-    
   end
 
   def challenge_leader
