@@ -17,6 +17,7 @@ class Game
     puts ""
     puts "Hello there! Welcome to the world of POKEMON! My name is OAK!"
     puts "People call me the POKEMON PROF!"
+    puts ""
     puts "This world is inhabited by creatures called POKEMON! For some"
     puts "people, POKEMON are pets. Others use them for fights. Myself..."
     puts "I study POKEMON as a profession."
@@ -28,10 +29,10 @@ class Game
     puts "dreams and adventures with POKEMON awaits! Let's go!"
     puts "Here, #{name.upcase}! There are POKEMON trainer"
     puts "In my old age, I have ony 3 left, but you can have one! Choose!"
-
+    puts ""
     options = ["Bulbasaur", "Charmander", "Squirtle"]
 
-    options.each.with_index {|option, index| print "#{index +1}. #{option}    "}
+    options.each.with_index {|option, index| print "#{index +1}. #{option}\t"}
     puts ""
     select_pokemon = ""
     until options.include?(select_pokemon)
@@ -52,6 +53,7 @@ class Game
   end
 
   def set_name(pokemon)
+    puts ""
     puts "You selected #{pokemon.upcase}. Great choice!"
     puts "Give your pokemon a name?"
     print "> "
@@ -59,6 +61,7 @@ class Game
   end
 
   def start_menu(player)
+    puts ""
     puts "#{player.name.upcase}, raise your young #{player.pokemon.name.upcase} by making it fight!"
     puts "When you feel ready you can challenge BROCK, the PEWTER's GYM LEADER"
     puts 
@@ -77,7 +80,7 @@ class Game
     # Suggested game flow
     start_menu(player)
     action = menu
-    until action == "Exit"
+    until action == "Exit" || action == "4"
       case action
       when "Train","2"
         train(player)
@@ -103,10 +106,14 @@ class Game
     puts "What do you want to do now?"
     puts "1. Fight        2. Leave"
     print "> "
-    option = gets.chomp
-    if option == "Fight"
-      battle = Battle.new(player, bot)
-      battle.start
+    option = ""
+    until option == "Leave" || option == "2"
+      option = gets.chomp
+      if option == "Fight" || option == "1"
+        battle = Battle.new(player, bot)
+        battle.start
+        break
+      end
     end
   end
 
@@ -123,13 +130,13 @@ class Game
     puts "Level: #{pok.level}"
     puts "Type: #{pok.type.join(", ")}"
     puts "Stats:"
-    puts "HP: #{pok.base_stats[:hp]}"
-    puts "Attack: #{pok.base_stats[:attack]}"
-    puts "Defense: #{pok.base_stats[:defense]}"
-    puts "Special Attack: #{pok.base_stats[:special_attack]}"
-    puts "Special Defense: #{pok.base_stats[:special_defense]}"
-    puts "Speed: #{pok.base_stats[:speed]}"
-    puts "Experience Points: #{pok.base_exp}"
+    puts "HP: #{pok.stat2[:hp]}"
+    puts "Attack: #{pok.stat2[:attack]}"
+    puts "Defense: #{pok.stat2[:defense]}"
+    puts "Special Attack: #{pok.stat2[:special_attack]}"
+    puts "Special Defense: #{pok.stat2[:special_defense]}"
+    puts "Speed: #{pok.stat2[:speed]}"
+    puts "Experience Points: #{pok.experience_points}"
   end
 
   def goodbye

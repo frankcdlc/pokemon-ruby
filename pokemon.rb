@@ -4,7 +4,7 @@ require_relative "pokedex/moves"
 
 class Pokemon
   # include neccesary modules
-  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp
+  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp, :experience_points
 
   attr_writer :current_move, :current_hp
 
@@ -54,8 +54,9 @@ class Pokemon
     @current_hp = @stat2[:hp]
   end
 
-  def receive_damage
+  def receive_damage(damage)
     # Complete this
+    @current_hp -= damage 
   end
 
   def set_current_move
@@ -64,27 +65,20 @@ class Pokemon
 
   def fainted?
     # Complete this
+    !@current_hp.positive?
   end
 
   def attack(target)
     # Print attack message 'Tortuguita used MOVE!'
     # Accuracy check
-    accuracy = false
-    accuracy = true if current_move[:accuracy] >= rand(1..100)
+    damage = 0
+    accuracy = true
+    accuracy = false if current_move[:accuracy] < rand(1..100)
     
-    # Else, print "But it MISSED!"
-    unless accuracy
-      puts "But it MISSED!"
     # If the movement is not missed
-    else
-    # -- Calculate base damage
-      offensive_stat = current_move[:type] == :normal ? stat2[:attack] : stat2[:special_attack]
-      
-      move_power = current_move[:power]
-      
-      target_defensive_stat = current_move[:type] == :normal ? target.stat2[:defense] : target.stat2[:special_defense]
-
-      damage = (((2 * level / 5.0 + 2).floor * offensive_stat * move_power / target_defensive_stat).floor / 50.0).floor + 2
+    if accuracy
+      # -- Calculate base damage
+      damage = calculate_base_damage(target)
     
       # -- Critical Hit check
       hit_critcal = 16 == rand(1..16) ? 1.5 : 1
@@ -95,35 +89,55 @@ class Pokemon
       end
 
       # -- Effectiveness check
-      # -- Mutltiply damage by effectiveness multiplier and round down. Print message if neccesary
       v_effectiveness = effectiveness(target)
 
-      # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
-      if v_effectiveness <= 0.5 && v_effectiveness > 0
-        puts "It's not very effective..."
-      # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
-      elsif v_effectiveness <= 1.5 && v_effectiveness > 0.5
-        puts "It's super effective!"
-      # ---- "It doesn't affect [target name]!" when effectivenes is 0
-      else
-        puts "It doesn't affect #{target.name}!"
-      end
+      # -- Mutltiply damage by effectiveness multiplier and round down. Print message if neccesary
       damage *=v_effectiveness
+      message_effectiveness(v_effectiveness)
       
       # -- Inflict damage to target and print message "And it hit [target name] with [damage] damage""
       puts "And it hit #{target.name} with #{damage} damage"
+    else
+    # Else, print "But it MISSED!"
+      puts "But it MISSED!"
     end
+    damage
   end
 
   def increase_stats(target)
     # Increase stats base on the defeated pokemon and print message "#[pokemon name] gained [amount] experience points"
+    @stat2.each do |key, value|
+      @stat2[key] += target.effort_points[:amount] if key == target.effort_points[:type]
+    end
 
+    @stat_effort.each do |key, value|
+      @stat_effort[key] += (base_stats[key] / 4.0).floor
+    end
+
+    gained_exp = (target.base_exp * target.level / 7.0).floor
+    @experience_points += gained_exp
+    puts "#{name} gained #{gained_exp} experience points"
     # If the new experience point are enough to level up, do it and print
     # message "#[pokemon name] reached level [level]!" # -- Re-calculate the stat
+
+
   end
 
   # private methods:
   # Create here auxiliary methods
+  def calculate_base_damage(target)
+    
+    offensive_stat = current_move[:type] == :normal ? stat2[:attack] : stat2[:special_attack]
+      
+    move_power = current_move[:power]
+      
+    target_defensive_stat = current_move[:type] == :normal ? target.stat2[:defense] : target.stat2[:special_defense]
+
+    damage = (((2 * level / 5.0 + 2).floor * offensive_stat * move_power / target_defensive_stat).floor / 50.0).floor + 2
+    
+    damage
+  end
+
   def effectiveness(target)
     multiplier = Pokedex::TYPE_MULTIPLIER
     type_attack = current_move[:type]
@@ -141,6 +155,20 @@ class Pokemon
     end
     mult
   end
+
+  def message_effectiveness(v_effectiveness)
+    # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
+    if v_effectiveness <= 0.5 && v_effectiveness > 0
+      puts "It's not very effective..."
+    # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
+    elsif v_effectiveness < 1.5 && v_effectiveness > 0.5
+    elsif v_effectiveness >= 1.5
+      puts "It's super effective!"
+    # ---- "It doesn't affect [target name]!" when effectivenes is 0
+    else
+      puts "It doesn't affect #{target.name}!"
+    end
+  end
 end
 
 # pokemon = Pokemon.new("Bulb", "Bulbasaur", 1)
@@ -151,3 +179,9 @@ end
 # p pokemon.stat2
 # effect = pokemon.effectiveness(pokemon2)
 # p effect
+# p pokemon.stat2
+# pokemon.increase_stats(pokemon2)
+# p pokemon.stat2
+# p pokemon.stat_effort
+# pokemon.increase_stats(pokemon2)
+# p pokemon.stat_effort
