@@ -34,12 +34,15 @@ class Bot < Player
 
   def select_move
     # Complete this
-    hash = Pokedex::MOVES
-    options = hash.collect { |key, value| key }
+    # hash = Pokedex::MOVES
+    # options = hash.collect { |key, value| key }
+    options = Pokedex::POKEMONS[pokemon.name][:moves]
     move_random = options.sample
     @pokemon.current_move = Pokedex::MOVES[move_random]
   end
 end
 
 # bot = Bot.new
-# p bot
+# p bot.pokemon
+# bot.select_move
+# p bot.pokemon.current_move

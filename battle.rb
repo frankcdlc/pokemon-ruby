@@ -19,43 +19,60 @@ class Battle
     puts ""
     player_p.prepare_for_battle
     bot_p.prepare_for_battle
-    puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
-    puts "HP: #{player_p.current_hp}"
-    puts "Random Person's #{bot_p.species.upcase} - Level #{bot_p.level}"
-    puts "HP: #{bot_p.current_hp}"
-    puts ""
-    puts "#{player.name}, select your move:"
-    puts ""
-    puts "1. #{player_p.moves[0]}      2. #{player_p.moves[1]}"
-    print "> "
-    player.select_move
-    bot.select_move
-    first = first_attacker(player_p, bot_p)
-    second = first == player_p ? bot_p : player_p
-    
     
     # Until one pokemon faints
+    until @player_p.fainted? || @bot_p.fainted?
+      # --Print Battle Status
+      puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
+      puts "HP: #{player_p.current_hp}"
+      puts "Random Person's #{bot_p.species.upcase} - Level #{bot_p.level}"
+      puts "HP: #{bot_p.current_hp}"
+      puts ""
 
-    # --Print Battle Status
-    
-    # --Both players select their moves
+      # --Both players select their moves
+      puts "#{player.name}, select your move:"
+      puts ""
+      puts "1. #{player_p.moves[0]}      2. #{player_p.moves[1]}"
+      print "> "
+      player.select_move
+      bot.select_move
 
-    # --Calculate which go first and which second
+      # --Calculate which go first and which second
+      first = first_attacker(player_p, bot_p)
+      second = first == player_p ? bot_p : player_p
 
-    # --First attack second
-    puts "--------------------------------------------------"
-    puts "#{first.name} used #{first.current_move[:name].upcase}!"
-    first.attack(second)
-    
-    # --If second is fainted, print fainted message
-    # --If second not fainted, second attack first
-    puts "--------------------------------------------------"
-    puts "#{second.name} used #{second.current_move[:name].upcase}!"
-    second.attack(first)
-    # --If first is fainted, print fainted message
-
+      # --First attack second
+      puts "--------------------------------------------------"
+      puts "#{first.name} used #{first.current_move[:name].upcase}!"
+      damage = first.attack(second)
+      second.receive_damage(damage)
+      
+      # --If second not fainted, second attack first
+      unless second.fainted?
+        puts "--------------------------------------------------"
+        puts "#{second.name} used #{second.current_move[:name].upcase}!"
+        damage = second.attack(first)
+        first.receive_damage(damage)
+        puts "--------------------------------------------------"
+        # --If first is fainted, print fainted message
+        puts "#{first.name} FAINTED!" if first.fainted?
+      else
+        # --If second is fainted, print fainted message
+        puts "--------------------------------------------------"
+        puts "#{second.name} FAINTED!"
+      end
+    end
     # Check which player won and print messages
+    winner = player_p.fainted? ? bot_p : player_p
+    losser = winner == player_p ? bot_p : player_p
+    puts "--------------------------------------------------"
+    puts "#{winner.name} WINS!"
+
     # If the winner is the Player increase pokemon stats
+    if winner == player_p
+      player_p.increase_stats(bot_p)
+    end
+    puts "-------------------Battle Ended!-------------------"
   end
 
   def first_attacker(player_p, bot_p)
