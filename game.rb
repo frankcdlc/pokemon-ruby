@@ -22,13 +22,13 @@ class Game
     puts "people, POKEMON are pets. Others use them for fights. Myself..."
     puts "I study POKEMON as a profession."
   end
-  
-  def set_name(pokemon)
+
+  def choose_name(pokemon)
     puts ""
     puts "You selected #{pokemon.upcase}. Great choice!"
     puts "Give your pokemon a name?"
     print "> "
-    pokemon_name = gets.chomp
+    gets.chomp
   end
 
   def select_pokemon(name)
@@ -42,14 +42,14 @@ class Game
 
     select_pokemon = ""
     until options.include?(select_pokemon)
-      options.each.with_index {|option, index| print "#{index +1}. #{option}\t"}
+      options.each.with_index { |option, index| print "#{index + 1}. #{option}\t" }
       puts ""
       print "> "
       select_pokemon = gets.chomp.downcase.capitalize
     end
     select_pokemon
   end
-  
+
   def get_input(prompt)
     input = ""
     while input.empty?
@@ -64,7 +64,7 @@ class Game
     puts ""
     puts "#{player.name.upcase}, raise your young #{player.pokemon.name.upcase} by making it fight!"
     puts "When you feel ready you can challenge BROCK, the PEWTER's GYM LEADER"
-    puts 
+    puts
   end
 
   def start
@@ -72,23 +72,23 @@ class Game
     greeting
     name = get_input("First, what's your name?")
     pokemon = select_pokemon(name)
-    pokemon_name = set_name(pokemon)
-    
+    pokemon_name = choose_name(pokemon)
+
     # Then create a Player with that information and store it in @player
     player = Player.new(name, pokemon, pokemon_name)
-    
+
     # Suggested game flow
     start_menu(player)
     action = menu
-    until action == "Exit" || action == "4"
+    until ["Exit", "4"].include?(action)
       case action
-      when "Train","2"
+      when "Train", "2"
         train(player)
         action = menu
-      when "Leader","3"
+      when "Leader", "3"
         challenge_leader(player)
         action = menu
-      when "Stats","1"
+      when "Stats", "1"
         show_stats(player)
         action = menu
       end
@@ -102,41 +102,41 @@ class Game
     bot_p = bot.pokemon
     puts ""
     puts "#{player.name}  challenge Random Person for training"
-    puts "#{bot.name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+    puts "#{bot.name} has a #{bot_p.species} level #{bot_p.level}"
     puts "What do you want to do now?"
     puts ""
     puts "1. Fight        2. Leave"
     print "> "
     option = ""
-    until option == "Leave" || option == "2"
+    until ["Leave", "2"].include?(option)
       option = gets.chomp.downcase.capitalize
-      if option == "Fight" || option == "1"
-        battle = Battle.new(player, bot)
-        battle.start
-        break
-      end
+      next unless ["Fight", "1"].include?(option)
+
+      battle = Battle.new(player, bot)
+      battle.start
+      break
     end
   end
 
   def challenge_leader(player)
     # Complete this
-     brook = Brook.new
-     brook_p = brook.pokemon
-     puts ""
-     puts "#{player.name} challenge the Gym Leader Brock for a fight"
-     puts "#{brook.name} has a #{brook.pokemon.species} level #{brook.pokemon.level}"
+    brook = Brook.new
+    brook_p = brook.pokemon
+    puts ""
+    puts "#{player.name} challenge the Gym Leader Brock for a fight"
+    puts "#{brook.name} has a #{brook_p.species} level #{brook_p.level}"
     puts "What do you want to do now?"
     puts ""
     puts "1. Fight        2. Leave"
     print "> "
-     option = ""
-    until option == "Leave" || option == "2"
+    option = ""
+    until ["Leave", "2"].include?(option)
       option = gets.chomp.downcase.capitalize
-       if option == "Fight" || option == "1"
-         battle = Battle.new(player, brook)
-        battle.start
-         break
-      end
+      next unless ["Fight", "1"].include?(option)
+
+      battle = Battle.new(player, brook)
+      battle.start
+      break
     end
   end
 
@@ -147,7 +147,7 @@ class Game
     puts "#{player.name}:"
     puts "Kind: #{pok.species}"
     puts "Level: #{pok.level}"
-    puts "Type: #{pok.type.join(", ")}"
+    puts "Type: #{pok.type.join(', ')}"
     puts "Stats:"
     puts "HP: #{pok.stat2[:hp]}"
     puts "Attack: #{pok.stat2[:attack]}"
@@ -168,7 +168,7 @@ class Game
   def menu
     # Complete this
     option = ""
-    until option == "1" || option == "Stats" || option == "2" ||    option == "Train" || option == "3" || option == "Leader" || option == "4" || option == "Exit" 
+    until ["1", "Stats", "2", "Train", "3", "Leader", "4", "Exit"].include?(option)
       puts "-----------------------Menu--------------------------"
       puts ""
       puts "1. Stats\t2. Train\t3. Leader\t4. Exit"
@@ -181,4 +181,3 @@ end
 
 game = Game.new
 game.start
-

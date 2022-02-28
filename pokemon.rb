@@ -4,9 +4,9 @@ require_relative "pokedex/moves"
 
 class Pokemon
   # include neccesary modules
-  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp, :experience_points, :array_level_exp
-
-  attr_writer :current_move, :current_hp, :experience_points, :level
+  attr_accessor :level, :current_move, :current_hp, :experience_points
+  attr_reader :name, :species, :type, :base_exp, :effort_points, :growth_rate, :base_stats, :moves, :stat_individual,
+              :stat1, :stat_effort, :stat2, :array_level_exp
 
   # (complete parameters)
   def initialize(pokemon_name, pokemon, level)
@@ -20,22 +20,23 @@ class Pokemon
     @growth_rate = poke_details[:growth_rate]
     @base_stats = poke_details[:base_stats]
     @moves = poke_details[:moves]
-    @stat_individual = { hp: rand(0..31), attack: rand(0..31), defense: rand(0..31), special_attack: rand(0..31), special_defense: rand(0..31), speed: rand(0..31) }
-  
+    @stat_individual = { hp: rand(0..31), attack: rand(0..31), defense: rand(0..31), special_attack: rand(0..31),
+                         special_defense: rand(0..31), speed: rand(0..31) }
+
     # Retrieve pokemon info from Pokedex and set instance variables
     # Calculate Individual Values and store them in instance variable
     # Create instance variable with effort values. All set to 0
-    @stat_effort = {hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
+    @stat_effort = { hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
     # Store the level in instance variable
     @level = level
     # If level is 1, set experience points to 0 in instance variable.
     # If level is not 1, calculate the minimum experience point for that level and store it in instance variable.
     @experience_points = 0
     # Calculate pokemon stats and store them in instance variable
-    @stat1 = {hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
+    @stat1 = { hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
     @stat2 = {}
     calculate_stat
-  
+
     @current_move = nil
     @current_hp = nil
 
@@ -50,7 +51,7 @@ class Pokemon
 
   def receive_damage(damage)
     # Complete this
-    @current_hp -= damage 
+    @current_hp -= damage
   end
 
   def set_current_move
@@ -68,17 +69,17 @@ class Pokemon
     damage = 0
     accuracy = true
     accuracy = false if current_move[:accuracy] < rand(1..100)
-    
+
     # If the movement is not missed
     if accuracy
       # -- Calculate base damage
       damage = calculate_base_damage(target)
-    
+
       # -- Critical Hit check
-      hit_critcal = 16 == rand(1..16) ? 1.5 : 1
+      hit_critcal = rand(1..16) == 16
       # -- If critical, multiply base damage and print message 'It was CRITICAL hit!'
-      if hit_critcal == 1.5
-        puts "It was CRITICAL hit!" 
+      if hit_critcal
+        puts "It was CRITICAL hit!"
         damage *= 1.5
       end
 
@@ -86,13 +87,13 @@ class Pokemon
       v_effectiveness = effectiveness(target)
 
       # -- Mutltiply damage by effectiveness multiplier and round down. Print message if neccesary
-      damage *=v_effectiveness
+      damage *= v_effectiveness
       message_effectiveness(v_effectiveness)
-      
+
       # -- Inflict damage to target and print message "And it hit [target name] with [damage] damage""
       puts "And it hit #{target.name} with #{damage} damage"
     else
-    # Else, print "But it MISSED!"
+      # Else, print "But it MISSED!"
       puts "But it MISSED!"
     end
     damage
@@ -100,47 +101,40 @@ class Pokemon
 
   def increase_stats(target)
     # Increase stats base on the defeated pokemon and print message "#[pokemon name] gained [amount] experience points"
-    @stat2.each do |key, value|
+    @stat2.each do |key, _value|
       @stat2[key] += target.effort_points[:amount] if key == target.effort_points[:type]
     end
 
-    @stat_effort.each do |key, value|
+    @stat_effort.each do |key, _value|
       @stat_effort[key] += (base_stats[key] / 4.0).floor
     end
 
     gained_exp = (target.base_exp * target.level / 7.0).floor
     @experience_points += gained_exp
     puts "#{name} gained #{gained_exp} experience points"
-  
+
     # If the new experience point are enough to level up, do it and print
     # message "#[pokemon name] reached level [level]!" # -- Re-calculate the stat
     prev_level = @level
     @array_level_exp.each_with_index do |level_exp, id|
-      if @experience_points >= level_exp
-        @level = id + 1
-      else
-        break
-      end
+      break unless @experience_points >= level_exp
+
+      @level = id + 1
     end
-    if prev_level != level
-      puts "#{name} reached level #{level}!"
-    end
+    puts "#{name} reached level #{level}!" if prev_level != level
     calculate_stat
   end
 
   # private methods:
   # Create here auxiliary methods
   def calculate_base_damage(target)
-    
     offensive_stat = current_move[:type] == :normal ? stat2[:attack] : stat2[:special_attack]
-      
+
     move_power = current_move[:power]
-      
+
     target_defensive_stat = current_move[:type] == :normal ? target.stat2[:defense] : target.stat2[:special_defense]
 
-    damage = (((2 * level / 5.0 + 2).floor * offensive_stat * move_power / target_defensive_stat).floor / 50.0).floor + 2
-    
-    damage
+    ((((2 * level / 5.0) + 2).floor * offensive_stat * move_power / target_defensive_stat).floor / 50.0).floor + 2
   end
 
   def effectiveness(target)
@@ -148,7 +142,7 @@ class Pokemon
     type_attack = current_move[:type]
     target_type_pokemon = target.type
     multiplier_array = []
-    multiplier.each do |hash| 
+    multiplier.each do |hash|
       multiplier_array.push(hash) if hash[:user] == type_attack
     end
     # p multiplier_array
@@ -163,7 +157,7 @@ class Pokemon
 
   def message_effectiveness(v_effectiveness)
     # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
-    if v_effectiveness <= 0.5 && v_effectiveness > 0
+    if v_effectiveness <= 0.5 && v_effectiveness.positive?
       puts "It's not very effective..."
     # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
     elsif v_effectiveness < 1.5 && v_effectiveness > 0.5
@@ -175,15 +169,15 @@ class Pokemon
     end
   end
 
-  def levels(growth_rate) 
+  def levels(growth_rate)
     exp = []
     n = 1
     40.times do
       case growth_rate
       when :slow
-        exp_aux = ((5 * (n.pow(3))) / 4.0).floor
+        exp_aux = ((5 * n.pow(3)) / 4.0).floor
       when :medium_slow
-        exp_aux = ((6 / 5.0) * n.pow(3) - 15 * n.pow(2) + 100 * n - 140).floor
+        exp_aux = (((6 / 5.0) * n.pow(3)) - (15 * n.pow(2)) + (100 * n) - 140).floor
       when :medium_fast
         exp_aux = n.pow(3)
       when :fast
@@ -196,17 +190,16 @@ class Pokemon
   end
 
   def calculate_stat
-    @stat1.each do |key,value|
+    @stat1.each do |key, _value|
       if key == :hp
-        hp = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + level + 10).floor
+        hp = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + level + 10).floor
         @stat2[key] = hp
       else
-        stat = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + 5).floor
+        stat = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + 5).floor
         @stat2[key] = stat
       end
     end
   end
-
 end
 
 # pokemon = Pokemon.new("Bulb", "Bulbasaur", 1)

@@ -1,5 +1,4 @@
 module GetInput
-
   def get_input(prompt)
     input = ""
     while input.empty?
@@ -19,15 +18,12 @@ module GetInput
 
     options = ["Bulbasaur", "Charmander", "Squirtle"]
 
-    options.each.with_index {|option, index| print "#{index}. #{option}    "}
+    options.each.with_index { |option, index| print "#{index}. #{option}    " }
 
     select_pokemon = ""
-    until options.include?(select_pokemon.downcase)
-    select_pokemon = gets.chomp
-    end
+    select_pokemon = gets.chomp until options.include?(select_pokemon.downcase)
     select_pokemon
   end
 end
 # include GetInput
 # get_input("Nombre: ")
-
