@@ -13,9 +13,3 @@ module Greet
     puts "I study POKEMON as a profession."
   end
 end
-
-
-
-
-
-
