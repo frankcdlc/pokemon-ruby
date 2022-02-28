@@ -94,8 +94,6 @@ class Game
       end
     end
     goodbye
-   
-    
   end
 
   def train(player)
