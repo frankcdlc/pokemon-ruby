@@ -1,7 +1,6 @@
 class Battle
   # (complete parameters)
   attr_reader :player, :bot, :player_p, :bot_p, :trainer_name
-  
   def initialize(player, bot)
     # Complete this
     @player = player
@@ -19,7 +18,6 @@ class Battle
     puts ""
     player_p.prepare_for_battle
     bot_p.prepare_for_battle
-    
     # Until one pokemon faints
     until @player_p.fainted? || @bot_p.fainted?
       # --Print Battle Status
@@ -30,10 +28,6 @@ class Battle
       puts ""
 
       # --Both players select their moves
-      puts "#{player.name}, select your move:"
-      puts ""
-      puts "1. #{player_p.moves[0]}      2. #{player_p.moves[1]}"
-      print "> "
       player.select_move
       bot.select_move
 
@@ -46,7 +40,6 @@ class Battle
       puts "#{first.name} used #{first.current_move[:name].upcase}!"
       damage = first.attack(second)
       second.receive_damage(damage)
-      
       # --If second not fainted, second attack first
       unless second.fainted?
         puts "--------------------------------------------------"
@@ -77,7 +70,6 @@ class Battle
         puts "You can continue training your Pokemon if you want"
       end
     end
-    
   end
 
   def first_attacker(player_p, bot_p)
@@ -86,7 +78,6 @@ class Battle
 
 		return player_p if player_move[:priority] > bot_move[:priority]
 		return bot_p if player_move[:priority] < bot_move[:priority]
-
 		if player_p.stat2[:speed] > bot_p.stat2[:speed]
 			player_p
 		elsif player_p.stat2[:speed] < bot_p.stat2[:speed]

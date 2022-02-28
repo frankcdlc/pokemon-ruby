@@ -23,6 +23,14 @@ class Game
     puts "I study POKEMON as a profession."
   end
   
+  def set_name(pokemon)
+    puts ""
+    puts "You selected #{pokemon.upcase}. Great choice!"
+    puts "Give your pokemon a name?"
+    print "> "
+    pokemon_name = gets.chomp
+  end
+
   def select_pokemon(name)
     puts "Right! So your name is #{name.upcase}!"
     puts "Your very own POKEMON legend is about to unfold! A world of"
@@ -32,12 +40,12 @@ class Game
     puts ""
     options = ["Bulbasaur", "Charmander", "Squirtle"]
 
-    options.each.with_index {|option, index| print "#{index +1}. #{option}\t"}
-    puts ""
     select_pokemon = ""
     until options.include?(select_pokemon)
-    print "> "
-    select_pokemon = gets.chomp.downcase.capitalize
+      options.each.with_index {|option, index| print "#{index +1}. #{option}\t"}
+      puts ""
+      print "> "
+      select_pokemon = gets.chomp.downcase.capitalize
     end
     select_pokemon
   end
@@ -50,14 +58,6 @@ class Game
       input = gets.chomp
     end
     input
-  end
-
-  def set_name(pokemon)
-    puts ""
-    puts "You selected #{pokemon.upcase}. Great choice!"
-    puts "Give your pokemon a name?"
-    print "> "
-    pokemon_name = gets.chomp
   end
 
   def start_menu(player)
@@ -167,11 +167,15 @@ class Game
 
   def menu
     # Complete this
-    puts "-----------------------Menu--------------------------"
-    puts ""
-    puts "1. Stats\t2. Train\t3. Leader\t4. Exit"
-    print "> "
-    opcion = gets.chomp.downcase.capitalize
+    option = ""
+    until option == "1" || option == "Stats" || option == "2" ||    option == "Train" || option == "3" || option == "Leader" || option == "4" || option == "Exit" 
+      puts "-----------------------Menu--------------------------"
+      puts ""
+      puts "1. Stats\t2. Train\t3. Leader\t4. Exit"
+      print "> "
+      option = gets.chomp.downcase.capitalize
+    end
+    option
   end
 end
 
