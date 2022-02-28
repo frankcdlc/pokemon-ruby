@@ -12,11 +12,7 @@ class Battle
 
   def start
     # Prepare the Battle (print messages and prepare pokemons)
-    puts ""
-    puts "#{bot.name} sent out #{bot_p.species.upcase}!"
-    puts "#{player.name} sent out #{player_p.name.upcase}!"
-    puts "-------------------Battle Start!-------------------"
-    puts ""
+    start_banner(player, bot, player_p, bot_p)
     player_p.prepare_for_battle
     bot_p.prepare_for_battle
     # Until one pokemon faints
@@ -29,7 +25,7 @@ class Battle
     # If the winner is the Player increase pokemon stats
     player_p.increase_stats(bot_p) if winner == player_p
     puts "-------------------Battle Ended!-------------------"
-    return unless bot.name == "Brook"
+    return unless bot.name == "Brook" && winner == player_p
 
     puts "Congratulation! You have won the game!"
     puts "You can continue training your Pokemon if you want"
@@ -54,27 +50,18 @@ class Battle
   def battle_loop(player, bot, player_p, bot_p)
     until @player_p.fainted? || @bot_p.fainted?
       # --Print Battle Status
-      puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
-      puts "HP: #{player_p.current_hp}"
-      puts "#{bot.name}'s #{bot_p.species.upcase} - Level #{bot_p.level}"
-      puts "HP: #{bot_p.current_hp}"
-      puts ""
-
+      print_battle_status(player, bot, player_p, bot_p)
       # --Both players select their moves
       player.select_move
       bot.select_move
-
       # --Calculate which go first and which second
       first = first_attacker(player_p, bot_p)
       second = first == player_p ? bot_p : player_p
-
       # --First attack second
-      puts "--------------------------------------------------"
-      puts "#{first.name} used #{first.current_move[:name].upcase}!"
+      puts "--------------------------------------------------\n#{first.name} used #{first.current_move[:name].upcase}!"
       damage = first.attack(second)
       second.receive_damage(damage)
       # --If second not fainted, second attack first
-      puts "--------------------------------------------------"
       puts "--------------------------------------------------"
       if second.fainted?
         # --If second is fainted, print fainted message
@@ -88,5 +75,19 @@ class Battle
         puts "#{first.name} FAINTED!" if first.fainted?
       end
     end
+  end
+
+  def start_banner(player, bot, player_p, bot_p)
+    puts "\n#{bot.name} sent out #{bot_p.species.upcase}!"
+    puts "#{player.name} sent out #{player_p.name.upcase}!"
+    puts "-------------------Battle Start!-------------------\n"
+  end
+
+  def print_battle_status(player, bot, player_p, bot_p)
+    puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
+    puts "HP: #{player_p.current_hp}"
+    puts "#{bot.name}'s #{bot_p.species.upcase} - Level #{bot_p.level}"
+    puts "HP: #{bot_p.current_hp}"
+    puts ""
   end
 end

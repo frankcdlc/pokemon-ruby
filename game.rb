@@ -1,65 +1,12 @@
 # require neccesary files
 require_relative "player"
 require_relative "battle"
-# require_relative "get_input"
-# require_relative "greeting"
-
-# include Greet
-# include GetInput
+require_relative "get_input"
+require_relative "greeting"
 
 class Game
-  def greeting
-    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
-    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
-    puts "#$##$##$##$ ---        Pokemon Ruby         --- #$##$##$#$#"
-    puts "#$#$#$#$#$#$#$                               $#$#$#$#$#$#$#"
-    puts "#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#"
-    puts ""
-    puts "Hello there! Welcome to the world of POKEMON! My name is OAK!"
-    puts "People call me the POKEMON PROF!"
-    puts ""
-    puts "This world is inhabited by creatures called POKEMON! For some"
-    puts "people, POKEMON are pets. Others use them for fights. Myself..."
-    puts "I study POKEMON as a profession."
-  end
-
-  def choose_name(pokemon)
-    puts ""
-    puts "You selected #{pokemon.upcase}. Great choice!"
-    puts "Give your pokemon a name?"
-    print "> "
-    gets.chomp
-  end
-
-  def select_pokemon(name)
-    puts "Right! So your name is #{name.upcase}!"
-    puts "Your very own POKEMON legend is about to unfold! A world of"
-    puts "dreams and adventures with POKEMON awaits! Let's go!"
-    puts "Here, #{name.upcase}! There are POKEMON trainer"
-    puts "In my old age, I have ony 3 left, but you can have one! Choose!"
-    puts ""
-    options = ["Bulbasaur", "Charmander", "Squirtle"]
-
-    select_pokemon = ""
-    until options.include?(select_pokemon)
-      options.each.with_index { |option, index| print "#{index + 1}. #{option}\t" }
-      puts ""
-      print "> "
-      select_pokemon = gets.chomp.downcase.capitalize
-    end
-    select_pokemon
-  end
-
-  def get_input(prompt)
-    input = ""
-    while input.empty?
-      puts prompt
-      print "> "
-      input = gets.chomp
-    end
-    input
-  end
-
+  include Greet
+  include GetInput
   def start_menu(player)
     puts ""
     puts "#{player.name.upcase}, raise your young #{player.pokemon.name.upcase} by making it fight!"
@@ -73,10 +20,8 @@ class Game
     name = get_input("First, what's your name?")
     pokemon = select_pokemon(name)
     pokemon_name = choose_name(pokemon)
-
     # Then create a Player with that information and store it in @player
     player = Player.new(name, pokemon, pokemon_name)
-
     # Suggested game flow
     start_menu(player)
     action = menu
@@ -84,14 +29,13 @@ class Game
       case action
       when "Train", "2"
         train(player)
-        action = menu
       when "Leader", "3"
         challenge_leader(player)
-        action = menu
+
       when "Stats", "1"
         show_stats(player)
-        action = menu
       end
+      action = menu
     end
     goodbye
   end
