@@ -4,9 +4,9 @@ require_relative "pokedex/moves"
 
 class Pokemon
   # include neccesary modules
-  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp, :experience_points
+  attr_reader :name, :species, :type, :level, :base_exp, :effort_points,:growth_rate, :base_stats, :moves, :stat_individual, :stat1, :stat_effort, :stat2, :current_move, :current_hp, :experience_points, :array_level_exp
 
-  attr_writer :current_move, :current_hp
+  attr_writer :current_move, :current_hp, :experience_points, :level
 
   # (complete parameters)
   def initialize(pokemon_name, pokemon, level)
@@ -34,18 +34,12 @@ class Pokemon
     # Calculate pokemon stats and store them in instance variable
     @stat1 = {hp: 0, attack: 0, defense: 0, special_attack: 0, special_defense: 0, speed: 0 }
     @stat2 = {}
-    @stat1.each do |key,value|
-      if key == :hp
-        hp = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + level + 10).floor
-        @stat2[key] = hp
-      else
-        stat = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + 5).floor
-        @stat2[key] = stat
-      end
-    end
-
+    calculate_stat
+  
     @current_move = nil
     @current_hp = nil
+
+    @array_level_exp = levels(growth_rate)
   end
 
   def prepare_for_battle
@@ -117,10 +111,21 @@ class Pokemon
     gained_exp = (target.base_exp * target.level / 7.0).floor
     @experience_points += gained_exp
     puts "#{name} gained #{gained_exp} experience points"
+    
     # If the new experience point are enough to level up, do it and print
     # message "#[pokemon name] reached level [level]!" # -- Re-calculate the stat
-
-
+    prev_level = @level
+    @array_level_exp.each_with_index do |level_exp, id|
+      if @experience_points >= level_exp
+        @level = id + 1
+      else
+        break
+      end
+    end
+    if prev_level != level
+      puts "#{name} reached level #{level}!"
+    end
+    calculate_stat
   end
 
   # private methods:
@@ -169,6 +174,39 @@ class Pokemon
       puts "It doesn't affect #{target.name}!"
     end
   end
+
+  def levels(growth_rate) 
+    exp = []
+    n = 1
+    40.times do
+      case growth_rate
+      when :slow
+        exp_aux = ((5 * (n.pow(3))) / 4.0).floor
+      when :medium_slow
+        exp_aux = ((6 / 5.0) * n.pow(3) - 15 * n.pow(2) + 100 * n - 140).floor
+      when :medium_fast
+        exp_aux = n.pow(3)
+      when :fast
+        exp_aux = (4 * n.pow(3) / 5.0).floor
+      end
+      exp.push(exp_aux)
+      n += 1
+    end
+    exp
+  end
+
+  def calculate_stat
+    @stat1.each do |key,value|
+      if key == :hp
+        hp = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + level + 10).floor
+        @stat2[key] = hp
+      else
+        stat = ((2 * base_stats[key] + stat_individual[key] + stat_effort[key]) * level / 100 + 5).floor
+        @stat2[key] = stat
+      end
+    end
+  end
+
 end
 
 # pokemon = Pokemon.new("Bulb", "Bulbasaur", 1)
@@ -185,3 +223,7 @@ end
 # p pokemon.stat_effort
 # pokemon.increase_stats(pokemon2)
 # p pokemon.stat_effort
+# p pokemon.array_level_exp
+# pokemon.experience_points = 180
+
+# p pokemon.level
