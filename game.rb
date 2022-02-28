@@ -37,7 +37,7 @@ class Game
     select_pokemon = ""
     until options.include?(select_pokemon)
     print "> "
-    select_pokemon = gets.chomp.capitalize
+    select_pokemon = gets.chomp.downcase.capitalize
     end
     select_pokemon
   end
@@ -83,32 +83,36 @@ class Game
     until action == "Exit" || action == "4"
       case action
       when "Train","2"
-        train(player)
+        train(player, trainer_name = "Random Name")
         action = menu
       when "Leader","3"
-        challenge_leader
+        challenge_leader(player, trainer_name = "Brook")
         action = menu
       when "Stats","1"
         show_stats(player)
         action = menu
       end
     end
-
-    goodbye
+    puts ""
+    puts "Thanks for playing Pokemon Ruby"
+    puts "This game was created with love by: #{player.name}"
+    
   end
 
-  def train(player)
+  def train(player,trainer_name = "Random Name")
     # Complete this
     bot = Bot.new
     bot_p = bot.pokemon
-    puts "#{player.name} challenge Random Person for training"
-    puts "Random Person has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+    puts ""
+    puts "Random Name challenge Random Person for training"
+    puts "#{trainer_name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
     puts "What do you want to do now?"
+    puts ""
     puts "1. Fight        2. Leave"
     print "> "
     option = ""
     until option == "Leave" || option == "2"
-      option = gets.chomp
+      option = gets.chomp.downcase.capitalize
       if option == "Fight" || option == "1"
         battle = Battle.new(player, bot)
         battle.start
@@ -117,8 +121,26 @@ class Game
     end
   end
 
-  def challenge_leader
+  def challenge_leader(player, trainer_name = "Brook")
     # Complete this
+     bot = Bot.new
+     bot_p = bot.pokemon
+     puts ""
+     puts "Brook challenge the Gym Leader Brock for a fight"
+     puts "#{trainer_name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+    puts "What do you want to do now?"
+    puts ""
+    puts "1. Fight        2. Leave"
+    print "> "
+     option = ""
+    until option == "Leave" || option == "2"
+      option = gets.chomp.downcase.capitalize
+       if option == "Fight" || option == "1"
+         battle = Battle.new(player, bot)
+        battle.start
+         break
+      end
+    end
   end
 
   def show_stats(player)

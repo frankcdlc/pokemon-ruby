@@ -1,4 +1,4 @@
-![https://cdn.apkmody.io/uploads/2020/09/Pokemon-Ruby-GBA-Rom-Download-720x360.jpg](https://cdn.apkmody.io/uploads/2020/09/Pokemon-Ruby-GBA-Rom-Download-720x360.jpg)
+![https://cdn.apkmody.io/uploads/2020/09/Pokemon-Ruby-GBA-Rom-Download-720x360.jpg](https://cdn.apkmody.io/uploads/2020/09/Pokemon-Ruby-GBA-Rom-Downloadember-720x360.jpg)
 
 This project consists to build a very close recreation of the classic Pokemon
 game. You will be able to select one pokemon at the beginning of the game. Then

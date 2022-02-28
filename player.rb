@@ -6,7 +6,7 @@ require_relative "pokedex/moves"
 class Player
   # (Complete parameters)
   attr_reader :name, :pokemon
-  def initialize(name, pokemon, pokemon_name = "", level = 1)
+  def initialize(name, pokemon, pokemon_name = "", level += 1)
     # Complete this
     @name = name
     pokemon_name = pokemon if pokemon_name == ""

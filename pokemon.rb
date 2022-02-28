@@ -117,6 +117,7 @@ class Pokemon
     gained_exp = (target.base_exp * target.level / 7.0).floor
     @experience_points += gained_exp
     puts "#{name} gained #{gained_exp} experience points"
+  
     # If the new experience point are enough to level up, do it and print
     # message "#[pokemon name] reached level [level]!" # -- Re-calculate the stat
 
