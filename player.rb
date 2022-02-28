@@ -6,7 +6,7 @@ require_relative "pokedex/moves"
 class Player
   # (Complete parameters)
   attr_reader :name, :pokemon
-  def initialize(name, pokemon, pokemon_name = "", level = 20)
+  def initialize(name, pokemon, pokemon_name = "", level = 1)
     # Complete this
     @name = name
     pokemon_name = pokemon if pokemon_name == ""
@@ -16,7 +16,14 @@ class Player
 
   def select_move
     # Complete this
-    move = gets.chomp
+    move = ""
+    until pokemon.moves.include?(move)
+      puts "#{name}, select your move:"
+      puts ""
+      puts "1. #{pokemon.moves[0]}      2. #{pokemon.moves[1]}"
+      print "> "
+      move = gets.chomp
+    end
     @pokemon.current_move = Pokedex::MOVES[move]
   end
 end
