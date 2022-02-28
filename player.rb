@@ -6,7 +6,7 @@ require_relative "pokedex/moves"
 class Player
   # (Complete parameters)
   attr_reader :name, :pokemon
-  def initialize(name, pokemon, pokemon_name = "", level += 1)
+  def initialize(name, pokemon, pokemon_name = "", level = 20)
     # Complete this
     @name = name
     pokemon_name = pokemon if pokemon_name == ""
@@ -42,7 +42,25 @@ class Bot < Player
   end
 end
 
+class Brook < Player
+  attr_reader :pokemon
+  def initialize
+    # hash = Pokedex::POKEMONS
+    pokemon = "Onix"
+    # options = hash.collect { |key, value| key }
+    # @random_pokemon = options.sample
+    super("Brook", pokemon, "", 10)
+  end
+  def select_move
+    options = Pokedex::POKEMONS[pokemon.name][:moves]
+    move_random = options.sample
+    @pokemon.current_move = Pokedex::MOVES[move_random]
+  end
+end
 # bot = Bot.new
 # p bot.pokemon
 # bot.select_move
 # p bot.pokemon.current_move
+
+# brok = Brook.new
+# p brok

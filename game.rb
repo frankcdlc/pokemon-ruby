@@ -83,29 +83,28 @@ class Game
     until action == "Exit" || action == "4"
       case action
       when "Train","2"
-        train(player, trainer_name = "Random Name")
+        train(player)
         action = menu
       when "Leader","3"
-        challenge_leader(player, trainer_name = "Brook")
+        challenge_leader(player)
         action = menu
       when "Stats","1"
         show_stats(player)
         action = menu
       end
     end
-    puts ""
-    puts "Thanks for playing Pokemon Ruby"
-    puts "This game was created with love by: #{player.name}"
+    goodbye
+   
     
   end
 
-  def train(player,trainer_name = "Random Name")
+  def train(player)
     # Complete this
     bot = Bot.new
     bot_p = bot.pokemon
     puts ""
-    puts "Random Name challenge Random Person for training"
-    puts "#{trainer_name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+    puts "#{player.name}  challenge Random Person for training"
+    puts "#{bot.name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
     puts "What do you want to do now?"
     puts ""
     puts "1. Fight        2. Leave"
@@ -121,13 +120,13 @@ class Game
     end
   end
 
-  def challenge_leader(player, trainer_name = "Brook")
+  def challenge_leader(player)
     # Complete this
-     bot = Bot.new
-     bot_p = bot.pokemon
+     brook = Brook.new
+     brook_p = brook.pokemon
      puts ""
-     puts "Brook challenge the Gym Leader Brock for a fight"
-     puts "#{trainer_name} has a #{bot.pokemon.species} level #{bot.pokemon.level}"
+     puts "#{player.name} challenge the Gym Leader Brock for a fight"
+     puts "#{brook.name} has a #{brook.pokemon.species} level #{brook.pokemon.level}"
     puts "What do you want to do now?"
     puts ""
     puts "1. Fight        2. Leave"
@@ -136,7 +135,7 @@ class Game
     until option == "Leave" || option == "2"
       option = gets.chomp.downcase.capitalize
        if option == "Fight" || option == "1"
-         battle = Battle.new(player, bot)
+         battle = Battle.new(player, brook)
         battle.start
          break
       end
@@ -163,6 +162,9 @@ class Game
 
   def goodbye
     # Complete this
+    puts ""
+    puts "Thanks for playing Pokemon Ruby"
+    puts "This game was created with love by: Team 5"
   end
 
   def menu

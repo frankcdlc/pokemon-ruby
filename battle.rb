@@ -12,31 +12,20 @@ class Battle
 
   def start
     # Prepare the Battle (print messages and prepare pokemons)
-    if trainer_name = "Brook"
-      puts "#{bot_p.species}"
     puts ""
-    puts "Brook sent out #{bot_p.species.upcase}!"
+    puts "#{bot.name} sent out #{bot_p.species.upcase}!"
     puts "#{player.name} sent out #{player_p.name.upcase}!"
     puts "-------------------Battle Start!-------------------"
     puts ""
     player_p.prepare_for_battle
     bot_p.prepare_for_battle
-    elsif trainer_name = "Random Name"
-      puts ""
-      puts "Random Name sent out #{bot_p.species.upcase}!"
-      puts "#{player.name} sent out #{player_p.name.upcase}!"
-      puts "-------------------Battle Start!-------------------"
-      puts ""
-      player_p.prepare_for_battle
-      bot_p.prepare_for_battle
-    end
     
     # Until one pokemon faints
     until @player_p.fainted? || @bot_p.fainted?
       # --Print Battle Status
       puts "#{player.name}'s #{player_p.name} - Level #{player_p.level}"
       puts "HP: #{player_p.current_hp}"
-      puts "#{trainer_name}'s #{bot_p.species.upcase} - Level #{bot_p.level}"
+      puts "#{bot.name}'s #{bot_p.species.upcase} - Level #{bot_p.level}"
       puts "HP: #{bot_p.current_hp}"
       puts ""
 
@@ -83,9 +72,9 @@ class Battle
     if winner == player_p
       player_p.increase_stats(bot_p)
       puts "-------------------Battle Ended!-------------------"
-      if trainer_name = "Brook"
-      puts "Congratulation! You have won the game!"
-      puts "You can continue training your Pokemon if you want"
+      if bot.name == "Brook"
+        puts "Congratulation! You have won the game!"
+        puts "You can continue training your Pokemon if you want"
       end
     end
     
