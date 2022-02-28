@@ -154,54 +154,53 @@ class Pokemon
     end
     mult
   end
+end
 
-  def message_effectiveness(v_effectiveness)
-    # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
-    if v_effectiveness <= 0.5 && v_effectiveness.positive?
-      puts "It's not very effective..."
-    # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
-    elsif v_effectiveness < 1.5 && v_effectiveness > 0.5
-    elsif v_effectiveness >= 1.5
-      puts "It's super effective!"
-    # ---- "It doesn't affect [target name]!" when effectivenes is 0
+def message_effectiveness(v_effectiveness)
+  # ---- "It's not very effective..." when effectivenes is less than or equal to 0.5
+  if v_effectiveness <= 0.5 && v_effectiveness.positive?
+    puts "It's not very effective..."
+  # ---- "It's super effective!" when effectivenes is greater than or equal to 1.5
+  elsif v_effectiveness < 1.5 && v_effectiveness > 0.5
+  elsif v_effectiveness >= 1.5
+    puts "It's super effective!"
+  # ---- "It doesn't affect [target name]!" when effectivenes is 0
+  else
+    puts "It doesn't affect #{target.name}!"
+  end
+end
+
+def calculate_stat
+  @stat1.each do |key, _value|
+    if key == :hp
+      hp = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + level + 10).floor
+      @stat2[key] = hp
     else
-      puts "It doesn't affect #{target.name}!"
-    end
-  end
-
-  def levels(growth_rate)
-    exp = []
-    n = 1
-    40.times do
-      case growth_rate
-      when :slow
-        exp_aux = ((5 * n.pow(3)) / 4.0).floor
-      when :medium_slow
-        exp_aux = (((6 / 5.0) * n.pow(3)) - (15 * n.pow(2)) + (100 * n) - 140).floor
-      when :medium_fast
-        exp_aux = n.pow(3)
-      when :fast
-        exp_aux = (4 * n.pow(3) / 5.0).floor
-      end
-      exp.push(exp_aux)
-      n += 1
-    end
-    exp
-  end
-
-  def calculate_stat
-    @stat1.each do |key, _value|
-      if key == :hp
-        hp = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + level + 10).floor
-        @stat2[key] = hp
-      else
-        stat = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + 5).floor
-        @stat2[key] = stat
-      end
+      stat = ((((2 * base_stats[key]) + stat_individual[key] + stat_effort[key]) * level / 100) + 5).floor
+      @stat2[key] = stat
     end
   end
 end
 
+def levels(growth_rate)
+  exp = []
+  n = 1
+  40.times do
+    case growth_rate
+    when :slow
+      exp_aux = ((5 * n.pow(3)) / 4.0).floor
+    when :medium_slow
+      exp_aux = (((6 / 5.0) * n.pow(3)) - (15 * n.pow(2)) + (100 * n) - 140).floor
+    when :medium_fast
+      exp_aux = n.pow(3)
+    when :fast
+      exp_aux = (4 * n.pow(3) / 5.0).floor
+    end
+    exp.push(exp_aux)
+    n += 1
+  end
+  exp
+end
 # pokemon = Pokemon.new("Bulb", "Bulbasaur", 1)
 # pokemon2 = Pokemon.new("hola", "Charmander", 1)
 # puts pokemon.name
